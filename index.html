@@ -29,7 +29,7 @@
         }
 
         const timestamp = new Date().valueOf();
-        const keycode = elText.value + "|-|\n"+ timestamp + "|x|huihutong";
+        const keycode = elText.value + "|-|"+ timestamp + "|x|huihutong";
         console.log(keycode)
 
         qrcode.makeCode(keycode);
