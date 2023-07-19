@@ -2,24 +2,148 @@
 <html>
 <head>
     <title>Javascript 二维码生成库：QRCode</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <script type="text/javascript" src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
 </head>
-<body>
-<input id="text" type="text" value="or3265RzUw_CBtc3Isnwh7bPIs74" style="width:80%" /><br />
-<button onClick="makeCode()" style="width:100px; height:50px">刷新</button><br />
+<style>
+    .qr-container {
+        width: 300px;
+        height: 300px;
+        margin: auto;
+        border: 5px solid #eab163;
+        border-radius: 5px;
+    }
 
-<div id="qrcode" style="width:300px; height:300px; margin-top:15px;"></div>
+    #qrcode {
+        margin: 25px;
+    }
+
+    body {
+        background-color: #f7f8fa;
+    }
+
+    .top-blue {
+        height: 200px;
+        width: 100vw;
+        background-color: #318cfe;
+    }
+
+    .main-container {
+        padding: 30px 20px 30px 20px;
+        position: fixed;
+        top: 50px;
+        left: 8vw;
+        z-index: 100;
+        width: 80vw;
+        background-color: white;
+        border-radius: 20px;
+    }
+
+    .head-info {
+        margin-bottom: 30px;
+    }
+
+    .bottom-info {
+        width: 50vw;
+        margin: auto;
+        text-align: center;
+        align-items: center;
+    }
+
+    input {
+        border: none;
+        color: gray;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        width: 28vw;
+    }
+
+    button {
+        background-color: white;
+        border: none;
+        color: red;
+        padding: 2px;
+    }
+
+    #end-time {
+        color: red;
+        font-size: 13px;
+    }
+
+    .float-icon-box {
+        float: right;
+        margin-right: 10px;
+        align-items: center;
+    }
+
+    #green-icon {
+        border-radius: 15px;
+        width: 60px;
+        height: 80px;
+        background-color: limegreen;
+
+    }
+</style>
+<body>
+<div class="top-blue">
+
+</div>
+
+<div class="main-container">
+    <div class="head-info">
+        <div class="float-icon-box">
+            <div id="green-icon"></div>
+            <div style="color: limegreen">已验证</div>
+        </div>
+
+        <h4>义里公寓</h4>
+        <div>
+            郭纪程<br/>
+            139****4657
+        </div>
+
+    </div>
+    <div class="qr-container">
+        <div id="qrcode" style="width:250px; height:250px;"></div>
+    </div>
+
+
+    <div class="bottom-info">
+        <input id="text" type="text" value="or3265RzUw_CBtc3Isnwh7bPIs74"/><br/>
+        <button onClick="makeCode()" style="height:50px">* 通行权限已开启</button>
+        <div id="end-time">* 有效期</div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
     var qrcode = new QRCode(document.getElementById("qrcode"), {
-        width : 300,
-        height : 300
+        width: 250,
+        height: 250
     });
 
-    function makeCode () {
+    function getNowFormatDate() {
+        let date = new Date(),
+            obj = {
+                year: date.getFullYear(), //获取完整的年份(4位)
+                month: date.getMonth() + 1, //获取当前月份(0-11,0代表1月)
+                strDate: date.getDate(), // 获取当前日(1-31)
+                hour: date.getHours(), //获取当前小时(0 ~ 23)
+                minute: date.getMinutes(), //获取当前分钟(0 ~ 59)
+                second: date.getSeconds() //获取当前秒数(0 ~ 59)
+            }
+
+        Object.keys(obj).forEach(key => {
+            if (obj[key] < 10) obj[key] = `0${obj[key]}`
+            // console.log(obj[key])
+        })
+
+        return `${obj.year}年${obj.month}月${obj.strDate}日${obj.hour}时${obj.minute}分`
+    }
+
+    function makeCode() {
         var elText = document.getElementById("text");
 
         if (!elText.value) {
@@ -29,19 +153,21 @@
         }
 
         const timestamp = new Date().valueOf();
-        const keycode = elText.value + "|-|"+ timestamp + "|x|huihutong";
+
+
+        const keycode = elText.value + "|-|" + timestamp + "|x|huihutong";
         console.log(keycode)
+        const validTime = "* 有效期：" + getNowFormatDate()
+        document.getElementById('end-time').innerHTML = validTime;
 
         qrcode.makeCode(keycode);
     }
 
     makeCode();
 
-    $("#text").
-    on("blur", function () {
+    $("#text").on("blur", function () {
         makeCode();
-    }).
-    on("keydown", function (e) {
+    }).on("keydown", function (e) {
         if (e.keyCode == 13) {
             makeCode();
         }
